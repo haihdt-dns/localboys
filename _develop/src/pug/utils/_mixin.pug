@@ -1,0 +1,96 @@
+//- 相対にしたい時はisRelativeをtrue =================================================================== */
+-
+  const isRelative = process.env.npm_package_config_isRelative;
+  let relativePrefix = '';
+  if (isRelative) {
+    const relativePath = nodePath.relative('src/pug/', filename);
+    const pathLevels = relativePath.split(nodePath.sep).length - 1;
+    relativePrefix = pathLevels === 0 ? './' : new Array(pathLevels).fill('../').join('');
+  }
+
+//- 基本設定 =================================================================== */
+-
+  const subDirectory = process.env.npm_package_config_subDirectory;
+  const basePath = isRelative ? relativePrefix : `/${ subDirectory }`;
+  var assetPath = `${ basePath }${ process.env.npm_package_config_assetPath }/`;
+
+
+//- image =================================================================== */
+-
+  const getImageDimension = (src) => {
+    const targetSrc = `${ src }`
+    let targetPath = targetSrc
+      .replace(/["']/g, '')
+      .replace(/\.\.\//g, '')
+      .replace(/^\//i, '');
+    targetPath = nodePath.resolve(nodeDest, `${ process.env.npm_package_config_assetPath }/`, targetPath);
+    let isError = false;
+    let dimensions = null;
+    try {
+      let file = nodeFs.readFileSync(targetPath);
+    } catch(e) {
+      isError = true;
+    }
+    if (!isError) {
+      dimensions = nodeSize(targetPath);
+    }
+    return dimensions;
+  }
+
+
+//-  pictureタグ
+//-  imagesからでいいです。例) +pic('images/utils/logo.png', 'images/utils/logo_sp.png', 'alt');
+
+-
+  const getWepPPath = (src) => {
+    return src.replace('images/', 'images_min/').replace(/\.jpg$|\.jpeg$|\.png$/g, '.webp')
+  }
+
+mixin pic(pc, sp, alt='')
+  -
+    const dimensionsPc = getImageDimension(pc);
+    const dimensionsSp = getImageDimension(sp);
+    const ratioPC = 769;
+
+  picture
+    if process.env.npm_package_config_enableWebP && pc.match(/\.jpg$|\.jpeg$|\.png$/g)
+      if (dimensionsPc)
+        source(srcset=assetPath + getWepPPath(pc), media=`(min-width:${ ratioPC }px)`, type='image/webp', width=dimensionsPc.width, height=dimensionsPc.height)
+      else
+        source(srcset=assetPath + getWepPPath(pc), media=`(min-width:${ ratioPC }px)`, type='image/webp')
+    else
+      if (dimensionsPc)
+        source(srcset=assetPath + pc, media=`(min-width:${ ratioPC }px)`, width=dimensionsPc.width, height=dimensionsPc.height)
+      else
+        source(srcset=assetPath + pc, media=`(min-width:${ ratioPC }px)`)
+
+    if process.env.npm_package_config_enableWebP && sp.match(/\.jpg$|\.jpeg$|\.png$/g)
+      != '\n          '
+      if (dimensionsSp)
+        img(src=assetPath + getWepPPath(sp), alt=alt, class=attributes.class, width=dimensionsSp.width, height=dimensionsSp.height)
+      else
+        img(src=assetPath + getWepPPath(sp), alt=alt, class=attributes.class)
+    else
+      != '\n          '
+      if (dimensionsSp)
+        img(src=assetPath + sp, alt=alt, class=attributes.class, width=dimensionsSp.width, height=dimensionsSp.height)
+      else
+        img(src=assetPath + sp, alt=alt, class=attributes.class)
+
+
+//-  width / height自動入力版画像タグ<img>。
+//-  imagesからでいいです。例) +img('images/utils/logo.png', 'alt');
+mixin img(src, alt='')
+  -
+    const dimensions = getImageDimension(src);
+  if process.env.npm_package_config_enableWebP && src.match(/\.jpg$|\.jpeg$|\.png$/g)
+    if dimensions
+      img(src=assetPath + getWepPPath(src), alt=alt, width=dimensions.width, height=dimensions.height, loading="lazy", decoding="async", class=attributes.class)
+    else
+      img(src=assetPath + getWepPPath(src), alt=alt, loading="lazy", decoding="async")
+  else
+    if dimensions
+      img(src=assetPath + src, alt=alt, width=dimensions.width, height=dimensions.height, loading="lazy", decoding="async", class=attributes.class)
+    else
+      img(src=assetPath + src, alt=alt, loading="lazy", decoding="async", class=attributes.class)
+

@@ -1,0 +1,19 @@
+extends ./utils/_base.pug
+
+block append stylesheet
+  //- assetPathで自動でサブディレクトリ対応の/assets/のパスが出るようにしてあります。
+  link(rel="stylesheet", href=assetPath + 'css/index.css')
+
+block main
+  .wrap
+    h1.logo
+      +img('images/common/logo.png', 'LOCAL BOYS')
+    .company__info
+      p.company__title
+        | ローカルボーイズ株式会社
+      p.company__data
+        | 〒320-0805
+        br
+        | 栃木県宇都宮市中央本町2-8
+        br
+        | TEL　028-666-4444
