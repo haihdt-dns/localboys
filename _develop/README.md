@@ -152,45 +152,6 @@ css/
 
 ---
 
-## GSAP Shockingly Plugins
-
-1. クライアントにソースコードを渡さない案件である事を確認する（ライセンスの関係）。
-   もし渡す必要があるならば、web フォントのようにクライアントで契約して貰う形になる。
-
-2. Mac : `~/.npmrc` / Win `C:\Users\%username%\.npmrc`　を作成
-3. 2)に下記をペースト
-
-```
-//npm.greensock.com/:_authToken=e488b143-d605-43bb-8a8a-16bc09042bbd
-@gsap:registry=https://npm.greensock.com
-```
-
-4. `npm install gsap@npm:@gsap/shockingly` を実行
-5. 有料プラグインが使えるようになります。
-
-例）scrollSmoother
-
-```
-import gsap from 'gsap';
-import { ScrollSmoother, ScrollTrigger } from 'gsap/all';
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
-
-ScrollSmoother.create({
-  smooth: 1,
-  effects: true
-});
-```
-
-```
-【pug】
-#smooth-wrapper
- #smooth-content
-```
-
-scrollSmoother と scrollTrigger の組み合わせがかなり強力です。
-
----
-
 ## React
 
 ```
