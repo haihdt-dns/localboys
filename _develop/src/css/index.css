@@ -1,0 +1,12 @@
+@charset "utf-8";
+
+/* Cascade Layer definition */
+@layer common, page, override;
+
+@import './_config/_variables.css';
+@import './_config/_media.css';
+
+/* Only in index.css */
+@import './_pages/index/_index_pc.css';
+@import './_pages/index/_index_tb.css';
+@import './_pages/index/_index_sp.css';

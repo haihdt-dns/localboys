@@ -1,0 +1,6 @@
+/* Use cssVariable to migrate to web standards. */
+/* color:var(--col_white); */
+
+:root {
+  --col_white: #fff;
+}

@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+/* Cascade Layer definition */
+@layer common, page, override;
+
+@import './_config/_variables.css';
+@import './_config/_media.css';
+
+/* Only in common.css */
+@import './_config/_reset.css' layer(common);
+@import './_modules/_hover.css' layer(common);
+@import './_modules/_common_override.css' layer(override);
+
+/*
+  A single file can now support tablets.
+  The contents of @media (--pc) {} are automatically converted.
+  (Of course, you can import _pc.css and _sp.css as before.)
+
+  1) set MediaQuery (--tb) on ./_config/_media.css
+  2) isAutoTablet = true on ../../postcss.config.js 
+*/
+@layer common {
+  @media (--pc) {
+  }
+  @media (--sp) {
+  }
+}

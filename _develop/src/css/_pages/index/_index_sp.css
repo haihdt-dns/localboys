@@ -1,0 +1,31 @@
+@media (--sp) {
+  .wrap {
+    height: 100vh;
+    width: 100vw;
+  }
+  .logo {
+    padding-top: vw(180);
+    text-align: center;
+    img {
+      height: auto;
+      margin: 0 auto;
+      width: 90%;
+    }
+  }
+  .company {
+    &__info {
+      margin: vw(120) vw(60) 0;
+    }
+    &__title {
+      font-size: vw(24);
+      font-weight: bold;
+      margin-bottom: vw(10);
+      text-align: left;
+    }
+    &__data {
+      font-size: vw(22);
+      line-height: 1.4;
+      text-align: left;
+    }
+  }
+}

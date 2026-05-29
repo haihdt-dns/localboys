@@ -1,0 +1,122 @@
+{
+  "name": "frontend-template",
+  "version": "1.0.0",
+  "description": "template",
+  "main": "index.js",
+  "engines": {
+    "node": "^20.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://backlog.caters.jp:8969/backlog/git/FRONTEND/FrontEndTemplate-v2.git"
+  },
+  "license": "ISC",
+  "author": "matsumoto",
+  "browserslist": [
+    ">= 0.25%"
+  ],
+  "config_info": {
+    "dest": "書き出し先を指定。",
+    "assetPath": "commonとかassetsとかのディレクトリ名。スラッシュ不要",
+    "subDirectory": "サブディレクトリが有る場合指定。最初に/は要らない。例:public_html/lp/の場合はlp/。lp/01/なども可",
+    "isRelative": "相対パスで処理したい場合true",
+    "enableWebP": "trueだとwebP生成に対応する。 画像は_mixin.pugの +img か +picで使用。"
+  },
+  "config": {
+    "dest": "../public_html/",
+    "assetPath": "assets",
+    "subDirectory": "",
+    "isRelative": false,
+    "enableWebP": false
+  },
+  "scripts": {
+    "start": "cross-env NODE_ENV=development run-s create:directory init",
+    "create:directory": "mkdirp \"src/fonts\" && mkdirp \"src/images\" && mkdirp \"src/static_files\"",
+    "init": "run-s clean:* build:file build:js && run-p watch:* && run-p validate:*",
+    "clean:console": "echo \"\\x1Bc\"",
+    "clean:host": "kill-port 3000",
+    "clean:js": "cross-conf-env rimraf \"npm_package_config_destnpm_package_config_subDirectorynpm_package_config_assetPath/js\"",
+    "watch:localhost": "browser-sync start --config bs-config.js",
+    "watch:pug": "cross-conf-env pug3 src/pug --out npm_package_config_destnpm_package_config_subDirectory --obj \"./npm_scripts/pug_func.js\" --watch --pretty",
+    "build:pug": "cross-conf-env pug3 src/pug --out npm_package_config_destnpm_package_config_subDirectory --obj \"./npm_scripts/pug_func.js\" --pretty",
+    "validate:html": "cross-conf-env chokidar \"npm_package_config_destnpm_package_config_subDirectory**/*.html\" -c \"html-validate --config htmlvalidate.json {path}\"",
+    "watch:css": "cross-conf-env postcss \"src/css/**/!(_)*.css\" -d \"npm_package_config_destnpm_package_config_subDirectorynpm_package_config_assetPath/css\" -c \"./postcss.config.js\" --env=production --ext css -w",
+    "build:css": "cross-conf-env postcss \"src/css/**/!(_)*.css\" -d \"npm_package_config_destnpm_package_config_subDirectorynpm_package_config_assetPath/css\" -c \"./postcss.config.js\" --env=production --ext css",
+    "watch:image": "node \"npm_scripts/watch_image\"",
+    "build:image": "node \"npm_scripts/build_image\"",
+    "watch:file": "node \"npm_scripts/watch_static_file\"",
+    "build:file": "node \"npm_scripts/cpx_file\"",
+    "build:html": "node \"npm_scripts/cache_busting\"",
+    "build:icon": "node \"npm_scripts/svgfont\"",
+    "watch:js": "cross-conf-env chokidar \"./src/js/**/*\" -c \"node npm_scripts/build.mjs\"",
+    "watch:ts": "cross-conf-env chokidar \"./src/js/**/*.ts\" -c \"tsc --noEmit --skipLibCheck\"",
+    "build:js": "node \"npm_scripts/build.mjs\"",
+    "build": "run-s clean:console clean:js build:js build:html",
+    "build:all": "run-s clean:js build:file build:image build:pug build:js build:css build:html"
+  },
+  "tempScripts": {
+    "clean:cache": "rimraf \"./node_modules/.cache/\"",
+    "watch:icon": "chokidar \"src/fonts/**/*.svg\" -c \"npm run build:icon\""
+  },
+  "dependencies": {
+    "@anduh/pug-cli": "^1.0.0-alpha8",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/eslint-plugin-tslint": "^7.0.2",
+    "@typescript-eslint/parser": "^7.2.0",
+    "autoprefixer": "^10.4.18",
+    "browser-sync": "^3.0.2",
+    "cheerio": "^1.0.0-rc.12",
+    "chokidar": "^3.6.0",
+    "chokidar-cli": "^3.0.0",
+    "connect-history-api-fallback": "^2.0.0",
+    "connect-ssi": "^1.1.1",
+    "cpx": "^1.5.0",
+    "cross-conf-env": "^1.3.0",
+    "cross-env": "^7.0.3",
+    "data.maybe": "^1.2.3",
+    "data.task": "^3.1.2",
+    "esbuild": "^0.20.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "fingerprinting": "^1.0.1",
+    "fs": "^0.0.2",
+    "gsap": "^3.12.5",
+    "html-validate": "^8.16.0",
+    "htmlparser2": "^9.1.0",
+    "image-size": "^1.1.1",
+    "immutable": "^4.3.5",
+    "immutable-ext": "^1.1.5",
+    "kill-port": "^2.0.1",
+    "mkdirp": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "path": "^0.12.7",
+    "postcss": "^8.4.36",
+    "postcss-cachebuster": "^0.1.6",
+    "postcss-cli": "^11.0.0",
+    "postcss-csso": "^6.0.1",
+    "postcss-custom-media": "^10.0.4",
+    "postcss-functions": "^4.0.2",
+    "postcss-import": "^16.0.1",
+    "postcss-momentum-scrolling": "^3.14.22",
+    "postcss-nested": "^6.0.1",
+    "postcss-progress": "^1.1.1",
+    "postcss-reporter": "^7.1.0",
+    "postcss-will-change-transition": "^1.2.0",
+    "prettier": "^3.2.5",
+    "pug": "^3.0.2",
+    "rimraf": "^5.0.5",
+    "sharp": "^0.33.2",
+    "stylelint": "^16.2.1",
+    "svgtofont": "^4.2.0",
+    "typescript": "^5.4.2",
+    "url": "^0.11.3"
+  },
+  "devDependencies": {
+    "@types/greensock": "^1.15.32",
+    "@types/node": "^20.11.28"
+  },
+  "volta": {
+    "node": "20.11.1",
+    "npm": "10.5.0"
+  }
+}
